@@ -63,3 +63,35 @@ img.zeitungslogo {
 body {
     overflow:hidden;
 }
+
+/* Add this CSS to your existing styles.css */
+.button-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Add transition for transform */
+    cursor: pointer;
+    z-index: 500;
+}
+
+.button-container:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.button-container i {
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+.dark-mode i {
+    color: #ffffff;
+}
+
+
