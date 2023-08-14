@@ -7,6 +7,8 @@ let mode = "light"; // Initialize mode to light
 
 darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
 
+
+
 darkModeToggle.addEventListener('click', () => {
     isDarkMode = !isDarkMode;
     sidebar.classList.toggle('dark-mode');
@@ -26,6 +28,8 @@ darkModeToggle.addEventListener('click', () => {
         logo.src = './img/logo.svg';
         mode = "light";
     }
+
+    document.cookie = `darkMode=${isDarkMode}; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/`;
 
     darkModeToggle.classList.add('clicked');
     setTimeout(() => {
@@ -179,4 +183,35 @@ function onEachFeature(feature, layer) {
     });
     
     layer.defaultColor = layer.options.fillColor; // speichert die Standardfarbe für späteren Gebrauch
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Check if the "darkMode" cookie exists
+const storedDarkMode = getCookie('darkMode');
+if (storedDarkMode !== undefined) {
+    isDarkMode = storedDarkMode === 'true';
+
+    if (isDarkMode) {
+        sidebar.classList.add('dark-mode');
+        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        sidebar.style.backgroundColor = '#121212';
+        sidebar.style.color = '#ffffff';
+        logo.src = './img/logodark.svg';
+        mode = "dark";
+    } else {
+        sidebar.classList.remove('dark-mode');
+        darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        sidebar.style.backgroundColor = '#ffffff';
+        sidebar.style.color = '#000000';
+        logo.src = './img/logo.svg';
+        mode = "light";
+    }
+    tileLayer.setUrl('https://tile.jawg.io/jawg-' + mode + '/{z}/{x}/{y}{r}.png?access-token=Odj6prjRlxlRJ78z8eEVI8NWyQ6Ywr4hLlVEXsfkCSHnb1LT1vpOgwBHrg9JHd2v');
+
+    map.invalidateSize();
 }
