@@ -1,8 +1,58 @@
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const sidebar = document.getElementById('sidebar');
+const logo = document.querySelector('.logo');
+const container = document.getElementById('mapid');
+let isDarkMode = false;
+let mode = "light"; // Initialize mode to light
+
+darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+
+darkModeToggle.addEventListener('click', () => {
+    isDarkMode = !isDarkMode;
+    sidebar.classList.toggle('dark-mode');
+
+    if (isDarkMode) {
+        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        sidebar.style.backgroundColor = '#121212';
+        container.style.backgroundColor = '#121212';
+        sidebar.style.color = '#ffffff';
+        logo.src = './img/logodark.svg';
+        mode = "dark";
+    } else {
+        darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        sidebar.style.backgroundColor = '#ffffff';
+        container.style.backgroundColor = '#ffffff';
+        sidebar.style.color = '#000000';
+        logo.src = './img/logo.svg';
+        mode = "light";
+    }
+
+    darkModeToggle.classList.add('clicked');
+    setTimeout(() => {
+        darkModeToggle.classList.remove('clicked');
+    }, 200);
+
+    // Update the tile layer URL based on the new mode
+    tileLayer.setUrl('https://tile.jawg.io/jawg-' + mode + '/{z}/{x}/{y}{r}.png?access-token=Odj6prjRlxlRJ78z8eEVI8NWyQ6Ywr4hLlVEXsfkCSHnb1LT1vpOgwBHrg9JHd2v');
+
+    // Refresh the map tiles and layout
+    map.invalidateSize();
+
+    // Update the color of the selected area based on the mode
+    if (ausgewählterBereich) {
+        ausgewählterBereich.setStyle({
+            color: isDarkMode ? '#121212' : '#ffffff',
+            weight: 5,
+        });
+    }
+});
+
 let map = L.map('mapid').setView([52.65, 9.07], 8);
 let zeitungsdaten;
 let layers = [];
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// Initialize tileLayer with the initial mode value
+let tileLayer = L.tileLayer('https://tile.jawg.io/jawg-' + mode + '/{z}/{x}/{y}{r}.png?access-token=Odj6prjRlxlRJ78z8eEVI8NWyQ6Ywr4hLlVEXsfkCSHnb1LT1vpOgwBHrg9JHd2v', {
     maxZoom: 12,
 }).addTo(map);
 
@@ -117,7 +167,7 @@ function onEachFeature(feature, layer) {
         }
         // Markiere den neuen Bereich
         this.setStyle({
-            color: '#FFFFFF', // Weißer Rand
+            color: isDarkMode ? '#121212' : '#ffffff', // Use appropriate background color based on mode
             weight: 5,        // Breite des Randes
         }).bringToFront();
     
